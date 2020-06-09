@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+if [ ! "$NOCONFLICT" ]; then
+	NOCONFLICT=""
+	NOCONFLICT="${NOCONFLICT}$(whoami)"
+
+	if [ "$NOCONFLICT_CONTEXT" ]; then
+		NOCONFLICT="${NOCONFLICT}-${NOCONFLICT_CONTEXT}"
+	fi
+fi
+
+NOCONFLICTPREFIX=$(echo $NOCONFLICT | sed -e 's/[^a-z0-9]//g')
+
+PROJECTNAME="${NOCONFLICT}-$(basename $(pwd))"
+PROJECTPREFIX=$(echo $PROJECTNAME | sed -e 's/[^a-z0-9]//g')
+
+export NOCONFLICT
+export NOCONFLICTPREFIX
+export PROJECTNAME
+export PROJECTPREFIX
+
+exec docker-compose -p $PROJECTNAME $*

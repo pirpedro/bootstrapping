@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# script/setup: Set up application for the first time after cloning, or set it
+#               back to the initial first unused state.
+# This is also useful for ensuring that your bootstrapping actually works well.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+script/bootstrap
+
+# Create config files
+cat > config/database.json <<EOF
+{
+	"development": {
+		"host": "mysql",
+		"dialect": "mysql",
+		"database": "web_app_dev",
+		"username": "web_app",
+		"password": "web_app",
+		"logging": false
+	},
+	"production": {
+		"host": "mysql",
+		"dialect": "mysql",
+		"database": "web_app",
+		"username": "web_app",
+		"password": "web_app",
+		"logging": false
+	},
+	"test": {
+		"host": "mysql",
+		"dialect": "mysql",
+		"database": "web_app_test",
+		"username": "web_app",
+		"password": "web_app",
+		"logging": false
+	}
+}
+EOF
+
+# Migrate the database
+script/run node_modules/.bin/sequelize db:migrate

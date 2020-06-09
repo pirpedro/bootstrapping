@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PROJECT_NAME=${1:-"web_app"}
+docker run --rm --name django_builder -e PYTHONUNBUFFERED=1 -e PYTHONDONTWRITEBYTECODE=1 -v $(pwd):/usr/src/app --workdir /usr/src/app -d python:3.8.3-alpine3.11 sh -c 'tail -f /dev/null'
+docker exec django_builder pip install Django
+docker exec django_builder mkdir app
+docker exec django_builder django-admin.py startproject ${PROJECT_NAME} ./app
+docker stop django_builder
+sudo chown -R $USER:$USER app
+

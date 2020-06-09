@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  jekyll:
+    build: .
+    volumes:
+      - .:/site
+    expose:
+      - 4000
+    ports:
+      - '8080:4000'
+

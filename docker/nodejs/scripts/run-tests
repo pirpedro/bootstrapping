@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+export NODE_ENV=test
+export BLUEBIRD_DEBUG=1
+
+# Die on any error
+set -e
+
+# Get arguments
+set -- `getopt "" $*`
+
+for i
+do
+	case "$i"
+	in
+		--)
+			shift
+			TARGETS=$*
+			break;;
+ 		*)
+			FLAGS="$FLAGS $i"
+			shift;;
+	esac
+done
+
+if [ "$TARGETS" = "" ]; then
+	TARGETS=test/**/*.js
+fi
+
+# Run chosen suite
+node_modules/.bin/mocha $FLAGS $TARGETS
